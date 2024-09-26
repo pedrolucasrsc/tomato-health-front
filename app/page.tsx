@@ -1,101 +1,276 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import * as React from 'react';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Box,
+  Grid,
+  Container,
+  // Card,
+  // CardContent,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from '@mui/material';
+import Image from 'next/image';
+import MenuIcon from '@mui/icons-material/Menu';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import SendIcon from '@mui/icons-material/Send';
+import InsightsIcon from '@mui/icons-material/Insights';
+
+export default function LandingPage() {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
+      setDrawerOpen(open);
+    };
+
+  const drawerList = (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem component="a" href="/login">
+          <ListItemText primary="Login do Especialista" />
+        </ListItem>
+        {/* Add more list items as needed */}
+      </List>
+    </Box>
+  );
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <React.Fragment>
+      {/* App Bar */}
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Tomato Health
+          </Typography>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleDrawer(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      {/* Drawer */}
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+        {drawerList}
+      </Drawer>
+
+      {/* Hero Section */}
+      <Box
+        sx={{
+          backgroundColor: '#f5f5f5',
+          py: 8,
+        }}
+      >
+        <Container maxWidth="md">
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography variant="h3" component="h1" gutterBottom sx={{ wordBreak: 'break-word',
+                fontSize: {
+                  xs: '2rem',
+                  sm: '3rem',
+                }
+              }}>
+                Identifique doenças em suas plantas de tomate instantaneamente
+              </Typography>
+              <Typography variant="h6" color="textSecondary" paragraph>
+                Utilize nosso aplicativo para diagnosticar problemas e manter
+                suas plantas saudáveis.
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                href="/diagnostico"
+              >
+                Enviar Foto Agora
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Image
+                width={897}
+                height={897}
+                src="/hero-mobile.png"
+                alt="Folha de Tomate"
+                style={{ width: '100%', borderRadius: 8 }}
+              />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* How It Works Section */}
+      <Box sx={{ py: 8 }}>
+        <Container maxWidth="md">
+          <Typography variant="h4" component="h2" align="center" gutterBottom>
+            Como Funciona
+          </Typography>
+          <Grid container spacing={4} sx={{ mt: 4 }}>
+            <Grid item xs={12} md={4}>
+              <Box textAlign="center">
+                <CameraAltIcon fontSize="large" color="primary" />
+                <Typography variant="h6" gutterBottom>
+                  Tire uma Foto
+                </Typography>
+                <Typography color="textSecondary">
+                  Capture uma imagem da folha do tomateiro que apresenta sinais
+                  de doença.
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box textAlign="center">
+                <SendIcon fontSize="large" color="primary" />
+                <Typography variant="h6" gutterBottom>
+                  Envie para Nós
+                </Typography>
+                <Typography color="textSecondary">
+                  Utilize nosso aplicativo para enviar a foto rapidamente.
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box textAlign="center">
+                <InsightsIcon fontSize="large" color="primary" />
+                <Typography variant="h6" gutterBottom>
+                  Receba o Diagnóstico
+                </Typography>
+                <Typography color="textSecondary">
+                  Obtenha resultados instantâneos sobre a saúde da sua planta.
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Benefits Section */}
+      <Box sx={{ backgroundColor: '#f5f5f5', py: 8 }}>
+        <Container maxWidth="md">
+          <Typography variant="h4" component="h2" align="center" gutterBottom>
+            Por que Usar Nosso Aplicativo?
+          </Typography>
+          <Grid container spacing={4} sx={{ mt: 4 }}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Rapidez
+              </Typography>
+              <Typography color="textSecondary">
+                Obtenha diagnósticos em tempo real para agir imediatamente.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Precisão
+              </Typography>
+              <Typography color="textSecondary">
+                Utilizamos tecnologia avançada para garantir resultados confiáveis.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Facilidade de Uso
+              </Typography>
+              <Typography color="textSecondary">
+                Interface intuitiva que qualquer pessoa pode utilizar.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Saúde das Plantas
+              </Typography>
+              <Typography color="textSecondary">
+                Mantenha suas plantas saudáveis e produtivas.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Testimonials Section (Optional) */}
+      {/* Uncomment if you have testimonials */}
+      {/*
+      <Box sx={{ py: 8 }}>
+        <Container maxWidth="md">
+          <Typography variant="h4" component="h2" align="center" gutterBottom>
+            O que Nossos Usuários Dizem
+          </Typography>
+          <Grid container spacing={4} sx={{ mt: 4 }}>
+            <Grid item xs={12} md={4}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    João Silva
+                  </Typography>
+                  <Typography color="textSecondary">
+                    "O aplicativo salvou minhas plantas! Recomendo a todos."
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            {/* Add more testimonials as needed */}
+          {/*</Grid>
+        </Container>
+      </Box>
+      */}
+
+      {/* Footer */}
+      <Box sx={{ backgroundColor: '#333', color: '#fff', py: 4 }}>
+        <Container maxWidth="md">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Tomato Health
+              </Typography>
+              <Typography>
+                Soluções inovadoras para a saúde das suas plantas.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                Links Úteis
+              </Typography>
+              <Button color="inherit" href="/sobre">
+                Sobre Nós
+              </Button>
+              <Button color="inherit" href="/contato">
+                Contato
+              </Button>
+              <Button color="inherit" href="/politica">
+                Política de Privacidade
+              </Button>
+            </Grid>
+          </Grid>
+          <Box textAlign="center" sx={{ mt: 4 }}>
+            <Typography variant="body2">
+              &copy; {new Date().getFullYear()} Tomato Health. Todos os direitos reservados.
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
+    </React.Fragment>
   );
 }
