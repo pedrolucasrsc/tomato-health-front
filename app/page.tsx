@@ -2,9 +2,6 @@
 
 import * as React from 'react';
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
   Typography,
   Button,
   Box,
@@ -12,71 +9,18 @@ import {
   Container,
   // Card,
   // CardContent,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
 } from '@mui/material';
 import Image from 'next/image';
-import MenuIcon from '@mui/icons-material/Menu';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SendIcon from '@mui/icons-material/Send';
 import InsightsIcon from '@mui/icons-material/Insights';
+import { DefaultAppBar } from './ui/app-bar';
 
 export default function LandingPage() {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-      setDrawerOpen(open);
-    };
-
-  const drawerList = (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        <ListItem component="a" href="/login">
-          <ListItemText primary="Login do Especialista" />
-        </ListItem>
-        {/* Add more list items as needed */}
-      </List>
-    </Box>
-  );
 
   return (
     <React.Fragment>
-      {/* App Bar */}
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Tomato Health
-          </Typography>
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      {/* Drawer */}
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-        {drawerList}
-      </Drawer>
+      <DefaultAppBar />
 
       {/* Hero Section */}
       <Box
