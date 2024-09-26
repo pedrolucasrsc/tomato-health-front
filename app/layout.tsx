@@ -8,7 +8,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Seu Aplicativo',
+  title: 'Tomato Health',
   description: 'Soluções inovadoras para a saúde das suas plantas.',
 };
 
@@ -21,9 +21,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
       </head>
       <body className={inter.className}>
         <AppRouterCacheProvider>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <DefaultAppBar />
-          {children}
+          <main style={{ flex: 1 }}>
+            {children}
+          </main>
           <Footer />
+        </div>
         </AppRouterCacheProvider>
       </body>
     </html>
