@@ -1,6 +1,4 @@
-'use client';
-
-import * as React from 'react';
+import { Fragment } from 'react';
 import {
   Typography,
   Button,
@@ -18,7 +16,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 export default function LandingPage() {
 
   return (
-    <React.Fragment>
+    <Fragment>
       {/* Hero Section */}
       <Box
         sx={{
@@ -177,6 +175,6 @@ export default function LandingPage() {
         </Container>
       </Box>
       */}
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -1,23 +1,16 @@
-'use client';
-
 import './globals.css';
 import { PropsWithChildren } from 'react';
 import { Inter } from 'next/font/google';
-import { CacheProvider } from '@emotion/react';
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import createEmotionCache from './createEmotionCache';
-import theme from './theme';
 import { DefaultAppBar } from './ui/app-bar';
 import { Footer } from './ui/footer';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
 const inter = Inter({ subsets: ['latin'] });
 
-// export const metadata = {
-//   title: 'Seu Aplicativo',
-//   description: 'Soluções inovadoras para a saúde das suas plantas.',
-// };
-
-const clientSideEmotionCache = createEmotionCache();
+export const metadata = {
+  title: 'Seu Aplicativo',
+  description: 'Soluções inovadoras para a saúde das suas plantas.',
+};
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
@@ -27,15 +20,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
         {/* Place any additional head elements here */}
       </head>
       <body className={inter.className}>
-        <CacheProvider value={clientSideEmotionCache}>
-          <ThemeProvider theme={theme}>
-            {/* CssBaseline provides a consistent baseline */}
-            <CssBaseline />
-            <DefaultAppBar />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        </CacheProvider>
+        <AppRouterCacheProvider>
+          <DefaultAppBar />
+          {children}
+          <Footer />
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
