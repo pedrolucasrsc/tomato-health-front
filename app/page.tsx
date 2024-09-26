@@ -14,8 +14,6 @@ import Image from 'next/image';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SendIcon from '@mui/icons-material/Send';
 import InsightsIcon from '@mui/icons-material/Insights';
-import { DefaultAppBar } from './ui/app-bar';
-import { Footer } from './ui/footer';
 
 export default function LandingPage() {
 
