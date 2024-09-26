@@ -7,6 +7,8 @@ import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import createEmotionCache from './createEmotionCache';
 import theme from './theme';
+import { DefaultAppBar } from './ui/app-bar';
+import { Footer } from './ui/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +31,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
           <ThemeProvider theme={theme}>
             {/* CssBaseline provides a consistent baseline */}
             <CssBaseline />
+            <DefaultAppBar />
             {children}
+            <Footer />
           </ThemeProvider>
         </CacheProvider>
       </body>

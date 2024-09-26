@@ -21,8 +21,6 @@ export default function LandingPage() {
 
   return (
     <React.Fragment>
-      <DefaultAppBar />
-
       {/* Hero Section */}
       <Box
         sx={{
@@ -181,8 +179,6 @@ export default function LandingPage() {
         </Container>
       </Box>
       */}
-
-    <Footer />
     </React.Fragment>
   );
 }
