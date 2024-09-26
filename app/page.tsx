@@ -3,11 +3,12 @@ import {
   Typography,
   Button,
   Box,
-  Grid,
+  // Grid,
   Container,
   // Card,
   // CardContent,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2'
 import Image from 'next/image';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SendIcon from '@mui/icons-material/Send';
@@ -25,8 +26,8 @@ export default function LandingPage() {
         }}
       >
         <Container maxWidth="md">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={4} alignItems={'center'}>
+            <Grid size={{xs: 12, md: 6}}>
               <Typography variant="h3" component="h1" gutterBottom sx={{ wordBreak: 'break-word',
                 fontSize: {
                   xs: '2rem',
@@ -48,7 +49,7 @@ export default function LandingPage() {
                 Enviar Foto Agora
               </Button>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs: 12, md: 6}}>
               <Image
                 width={897}
                 height={897}
@@ -68,7 +69,7 @@ export default function LandingPage() {
             Como Funciona
           </Typography>
           <Grid container spacing={4} sx={{ mt: 4 }}>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs: 12, md: 4}}>
               <Box textAlign="center">
                 <CameraAltIcon fontSize="large" color="primary" />
                 <Typography variant="h6" gutterBottom>
@@ -80,7 +81,7 @@ export default function LandingPage() {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs: 12, md: 4}}>
               <Box textAlign="center">
                 <SendIcon fontSize="large" color="primary" />
                 <Typography variant="h6" gutterBottom>
@@ -91,7 +92,7 @@ export default function LandingPage() {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{xs: 12, md: 4}}>
               <Box textAlign="center">
                 <InsightsIcon fontSize="large" color="primary" />
                 <Typography variant="h6" gutterBottom>
@@ -113,7 +114,7 @@ export default function LandingPage() {
             Por que Usar Nosso Aplicativo?
           </Typography>
           <Grid container spacing={4} sx={{ mt: 4 }}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs: 12, md: 6}}>
               <Typography variant="h6" gutterBottom>
                 Rapidez
               </Typography>
@@ -121,7 +122,7 @@ export default function LandingPage() {
                 Obtenha diagnósticos em tempo real para agir imediatamente.
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs: 12, md: 6}}>
               <Typography variant="h6" gutterBottom>
                 Precisão
               </Typography>
@@ -129,7 +130,7 @@ export default function LandingPage() {
                 Utilizamos tecnologia avançada para garantir resultados confiáveis.
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs: 12, md: 6}}>
               <Typography variant="h6" gutterBottom>
                 Facilidade de Uso
               </Typography>
@@ -137,7 +138,7 @@ export default function LandingPage() {
                 Interface intuitiva que qualquer pessoa pode utilizar.
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{xs: 12, md: 6}}>
               <Typography variant="h6" gutterBottom>
                 Saúde das Plantas
               </Typography>
