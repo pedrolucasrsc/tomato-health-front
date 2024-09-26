@@ -22,7 +22,10 @@ export default function LandingPage() {
       <Box
         sx={{
           backgroundColor: '#f5f5f5',
-          py: 8,
+          py: {
+            xs: 4,
+            sm: 8,
+          }
         }}
       >
         <Container maxWidth="md">

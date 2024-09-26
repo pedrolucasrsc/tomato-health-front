@@ -27,8 +27,11 @@ export function DefaultAppBar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem component="a" href="/login">
-          <ListItemText primary="Login do Especialista" />
+        <ListItem component="a" href="/">
+          <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem component="a" href="/diagnostico">
+          <ListItemText primary="App" />
         </ListItem>
         {/* Add more list items as needed */}
       </List>
