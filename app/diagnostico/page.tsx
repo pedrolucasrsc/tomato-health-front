@@ -9,6 +9,7 @@ import {
   CardMedia,
   CardActions,
   IconButton,
+  CardContent,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Camera, { FACING_MODES } from 'react-html5-camera-photo';
@@ -17,8 +18,11 @@ import { InstructionCard } from '../ui/instruction-card';
 
 export default function DiagnosticoPage() {
   const [showCard, setShowCard] = useState(true);
-  const [imageData, setImageData] = useState("");
+  const [imageData, setImageData] = useState('');
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [diagnosis, setDiagnosis] = useState('');
+  const [exampleImage, setExampleImage] = useState('');
+
 
   const handleHelpClick = () => {
     setShowCard(true);
@@ -30,9 +34,16 @@ export default function DiagnosticoPage() {
   };
 
   const handleRetakePhoto = () => {
-    setImageData("");
+    setImageData('');
     setIsCameraActive(true);
+    setDiagnosis('');
+    setExampleImage('');
   };
+
+  interface DiagnosisResult {
+    diagnosis: string;
+    message: string
+}
 
   const handleSendPhoto = async () => {
     if (!imageData) return;
@@ -49,8 +60,12 @@ export default function DiagnosticoPage() {
 
       if (response.ok) {
         // Lidar com a resposta do servidor
-        const result = await response.json();
-        alert(`Diagnóstico recebido: ${result.diagnosis}`);
+        const result: DiagnosisResult = await response.json();
+        alert(result.message);
+        setDiagnosis(result.diagnosis);
+
+        // mudar para acomodar novos exemplos
+        setExampleImage('/exemplos/mancha-de-alternaria.webp');
       } else {
         alert('Falha ao enviar a foto.');
       }
@@ -69,32 +84,75 @@ export default function DiagnosticoPage() {
             Diagnostique seu tomate
           </Typography>
 
-          {/* Renderiza a câmera se não houver imagem e a câmera estiver ativa */}
-          {isCameraActive ? (
-            <Camera
-              onTakePhoto={(dataUri: string) => handleTakePhoto(dataUri)}
-              idealFacingMode={FACING_MODES.ENVIRONMENT} // Câmera traseira
-            />
-          ) : imageData ? (
-            <Card sx={{ maxWidth: 345, margin: 'auto' }}>
-              <CardMedia
-                component="img"
-                image={imageData}
-                alt="Foto do tomate"
-              />
-              <CardActions sx={{ justifyContent: 'center' }}>
-                <Button variant="contained" onClick={handleRetakePhoto}>
-                  Tirar outra foto
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleSendPhoto}>
-                  Enviar foto
-                </Button>
-              </CardActions>
-            </Card>
+          {/* Se tivermos um diagnóstico, mostramos o resultado */}
+          {diagnosis ? (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant="h5" gutterBottom>
+                Seu tomateiro está com: {diagnosis}
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Imagem tirada pelo usuário */}
+                <Card sx={{ maxWidth: 345, m: 2 }}>
+                  <CardMedia component="img" image={imageData} alt="Sua foto" />
+                  <CardContent>
+                    <Typography variant="subtitle1" align="center">
+                      Sua Foto
+                    </Typography>
+                  </CardContent>
+                </Card>
+
+                {/* Imagem de exemplo da doença */}
+                <Card sx={{ maxWidth: 345, m: 2 }}>
+                  <CardMedia component="img" image={exampleImage} alt="Exemplo da doença" />
+                  <CardContent>
+                    <Typography variant="subtitle1" align="center">
+                      Exemplo de {diagnosis}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleRetakePhoto}
+                sx={{ mt: 2 }}
+              >
+                Diagnosticar novamente
+              </Button>
+            </Box>
           ) : (
-            <Button variant="contained" onClick={() => setIsCameraActive(true)}>
-              Acessar a câmera
-            </Button>
+            // Renderizações anteriores (câmera, confirmação de envio, etc.)
+            <>
+              {isCameraActive ? (
+                <Camera
+                  onTakePhoto={(dataUri: string) => handleTakePhoto(dataUri)}
+                  idealFacingMode={FACING_MODES.ENVIRONMENT}
+                />
+              ) : imageData ? (
+                <Card sx={{ maxWidth: 345, margin: 'auto' }}>
+                  <CardMedia component="img" image={imageData} alt="Foto do tomate" />
+                  <CardActions sx={{ justifyContent: 'center' }}>
+                    <Button variant="contained" onClick={handleRetakePhoto}>
+                      Tirar outra foto
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleSendPhoto}>
+                      Enviar foto
+                    </Button>
+                  </CardActions>
+                </Card>
+              ) : (
+                <Button variant="contained" onClick={() => setIsCameraActive(true)}>
+                  Acessar a câmera
+                </Button>
+              )}
+            </>
           )}
 
           {/* Botão de interrogação */}
