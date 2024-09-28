@@ -17,6 +17,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="pt-BR">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.png" />
         {/* Place any additional head elements here */}
       </head>
       <body className={inter.className}>
