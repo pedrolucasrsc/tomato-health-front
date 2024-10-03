@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   // Simular a resposta com uma doença de tomate
   const response = {
     message: "Imagem recebida com sucesso.",
-    diagnosis: "mancha-de-alternaria",
+    diagnosis: "blabla",
   };
 
   // Retornar a resposta simulada

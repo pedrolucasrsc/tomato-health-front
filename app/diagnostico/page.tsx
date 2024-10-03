@@ -22,6 +22,7 @@ export default function DiagnosticoPage() {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [diagnosis, setDiagnosis] = useState('');
   const [exampleImage, setExampleImage] = useState('');
+  const classNames = ['mancha-de-alternaria', 'requeima']
 
 
   const handleHelpClick = () => {
@@ -43,7 +44,18 @@ export default function DiagnosticoPage() {
   interface DiagnosisResult {
     diagnosis: string;
     message: string
-}
+  }
+
+  function diagnosisImage(diagnosisName: string) {
+    if (diagnosisExists(diagnosisName)) {
+      return '/exemplos/'.concat(diagnosisName, '.webp');
+    }
+    return '/exemplos/not-found.webp';
+  }
+
+  function diagnosisExists(diagnosisName: string) {
+    return classNames.includes(diagnosisName) 
+  }
 
   const handleSendPhoto = async () => {
     if (!imageData) return;
@@ -65,7 +77,7 @@ export default function DiagnosticoPage() {
         setDiagnosis(result.diagnosis);
 
         // mudar para acomodar novos exemplos
-        setExampleImage('/exemplos/mancha-de-alternaria.webp');
+        setExampleImage(diagnosisImage(result.diagnosis));
       } else {
         alert('Falha ao enviar a foto.');
       }
