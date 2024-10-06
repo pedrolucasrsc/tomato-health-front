@@ -21,6 +21,7 @@ export default function DiagnosticoPage() {
   const [imageData, setImageData] = useState('');
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [diagnosis, setDiagnosis] = useState('');
+  const [llmOutput, setLlmOutput] = useState('');
   const [exampleImage, setExampleImage] = useState('');
   const classNames = ['mancha-de-alternaria', 'requeima']
 
@@ -38,12 +39,14 @@ export default function DiagnosticoPage() {
     setImageData('');
     setIsCameraActive(true);
     setDiagnosis('');
+    setLlmOutput('');
     setExampleImage('');
   };
 
   interface DiagnosisResult {
     diagnosis: string;
-    message: string
+    message: string;
+    llm_output: string
   }
 
   function diagnosisImage(diagnosisName: string) {
@@ -75,6 +78,7 @@ export default function DiagnosticoPage() {
         const result: DiagnosisResult = await response.json();
         alert(result.message);
         setDiagnosis(result.diagnosis);
+        setLlmOutput(result.llm_output);
 
         // mudar para acomodar novos exemplos
         setExampleImage(diagnosisImage(result.diagnosis));
@@ -101,6 +105,9 @@ export default function DiagnosticoPage() {
             <Box sx={{ mt: 4 }}>
               <Typography variant="h5" gutterBottom>
                 Seu tomateiro está com: {diagnosis}
+              </Typography>
+              <Typography>
+                {llmOutput}
               </Typography>
               <Box
                 sx={{
