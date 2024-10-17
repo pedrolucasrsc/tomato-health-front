@@ -7,11 +7,25 @@ export async function POST(request: Request) {
 
   // Simular a resposta com uma doença de tomate
   const response = {
-    message: "Imagem recebida com sucesso.",
-    diagnosis: "requeima",
-    llm_output:
-      "Seu tomateiro está com Requeima, uma doença fúngica que requer cuidados específicos. Para tratar essa doença, é importante seguir os seguintes passos:\n\n1. Remover as partes afetadas: Corte e descarte todas as folhas e frutos que apresentam sinais da doença para evitar a propagação do fungo.\n\n2. Aplicar fungicidas adequados: Utilize fungicidas à base de cobre ou outros recomendados para Requeima, seguindo sempre as instruções do rótulo e respeitando o período de carência.\n\n3. Melhorar a circulação de ar: Espaçe as plantas adequadamente e realize podas para aumentar a ventilação entre elas, reduzindo a umidade que favorece o fungo.\n\n4. Evitar molhar as folhas ao irrigar: Prefira a irrigação por gotejamento ou regue diretamente o solo, evitando a umidade nas folhas que facilita a infecção.\n\n5. Realizar rotação de culturas: Evite plantar tomateiros ou outras solanáceas no mesmo local por períodos consecutivos para diminuir a presença do fungo no solo.\n\n6. Monitoramento constante: Inspecione regularmente as plantas para detectar precocemente novos sinais da doença e agir rapidamente.\n\n7. Eliminar restos culturais: Após a colheita, remova e destrua todos os restos de plantas para reduzir a fonte de inóculo para a próxima safra.\n\nSeguindo esses cuidados, você aumentará as chances de controlar a Requeima e manter seu tomateiro saudável.",
-  };
+    "llm_response": "### Management and Treatment of Tomato Early Blight\n\n**Early Blight Overview:**\nTomato Early Blight is caused by the fungus *Alternaria solani*. It typically manifests as dark spots on leaves that can eventually lead to leaf drop and reduced yield.\n\n#### Steps to Manage and Treat Early Blight:\n\n1. **Remove Affected Leaves:**\n   - Carefully prune away any leaves showing signs of early blight. Be sure to dispose of them properly; do not compost them, as this can spread the disease.\n\n2. **Improve Air Circulation:**\n   - Ensure that your tomato plants are spaced adequately apart to promote airflow. This helps reduce humidity around the plants, which can inhibit fungal growth.\n\n3. **Watering Practices:**\n   - Water the plants at the base rather than overhead. This reduces leaf wetness and helps prevent fungal infections. Water early in the day to allow foliage to dry quickly.\n\n4. **Fungicide Application:**\n   - Consider applying a",
+    "ml_result": {
+        "detected_objects": [
+            {
+                "box": [
+                    156.86093139648438,
+                    113.67363739013672,
+                    599.748779296875,
+                    768.0
+                ],
+                "class_index": "0",
+                "class_name": "Tomato Early blight leaf",
+                "score": 0.6747763752937317
+            }
+        ],
+        "image_height": 768,
+        "image_width": 768
+    }
+};
 
   // Retornar a resposta simulada
   return NextResponse.json(response, { status: 200 });

@@ -15,6 +15,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Camera, { FACING_MODES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css'; // Estilos para a câmera
 import { InstructionCard } from '../ui/instruction-card';
+import ReactMarkdown from 'react-markdown';
 
 export default function DiagnosticoPage() {
   const [showCard, setShowCard] = useState(true);
@@ -43,11 +44,24 @@ export default function DiagnosticoPage() {
     setExampleImage('');
   };
 
-  interface DiagnosisResult {
-    diagnosis: string;
-    message: string;
-    llm_output: string
-  }
+interface Response {
+  llm_response: string;
+  ml_result: MlResult;
+}
+
+interface MlResult {
+  detected_objects: DetectedObject[];
+  image_height: number;
+  image_width: number;
+}
+
+interface DetectedObject {
+  box: number[];
+  class_index: string;
+  class_name: string;
+  score: number;
+}
+
 
   function diagnosisImage(diagnosisName: string) {
     if (diagnosisExists(diagnosisName)) {
@@ -75,13 +89,13 @@ export default function DiagnosticoPage() {
 
       if (response.ok) {
         // Lidar com a resposta do servidor
-        const result: DiagnosisResult = await response.json();
-        alert(result.message);
-        setDiagnosis(result.diagnosis);
-        setLlmOutput(result.llm_output);
+        const result: Response = await response.json();
+        const diagnosis = result.ml_result.detected_objects[0].class_name;
+        setDiagnosis(diagnosis);
+        setLlmOutput(result.llm_response);
 
         // mudar para acomodar novos exemplos
-        setExampleImage(diagnosisImage(result.diagnosis));
+        setExampleImage(diagnosisImage(diagnosis));
       } else {
         alert('Falha ao enviar a foto.');
       }
@@ -106,9 +120,9 @@ export default function DiagnosticoPage() {
               <Typography variant="h5" gutterBottom>
                 Seu tomateiro está com: {diagnosis}
               </Typography>
-              <Typography>
+              <ReactMarkdown>
                 {llmOutput}
-              </Typography>
+              </ReactMarkdown>
               <Box
                 sx={{
                   display: 'flex',
