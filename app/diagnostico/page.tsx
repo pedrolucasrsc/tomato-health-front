@@ -94,17 +94,26 @@ interface DetectedObject {
 
     try {
       // Enviar a imagem para o servidor usando uma requisição POST
+      console.log("1");
       const formData = new FormData();
+      console.log("2");
       formData.append('image', dataURLtoFile(imageData, 'temp.jpg')); // imageData pode ser um Blob ou File
-      const response = await fetch(`{environment.API_URL}/process_image`, {
+      console.log("3");
+      const response = await fetch(`${environment.API_URL}/process_image`, {
         method: 'POST',
         body: formData,
       });
+      console.log("resposta a seguir");
+      console.log(`resposta: ${response}`);
 
       if (response.ok) {
         // Lidar com a resposta do servidor
+        console.log("entrou aqui")
         const result: Response = await response.json();
+        console.log(`result: ${result.llm_response}`)
+        console.log("4")
         const diagnosis = result.ml_result.detected_objects[0].class_name;
+        console.log("5")
         setDiagnosis(diagnosis);
         setLlmOutput(result.llm_response);
 
