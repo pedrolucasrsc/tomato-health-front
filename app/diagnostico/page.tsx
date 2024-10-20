@@ -16,6 +16,7 @@ import Camera, { FACING_MODES } from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css'; // Estilos para a câmera
 import { InstructionCard } from '../ui/instruction-card';
 import ReactMarkdown from 'react-markdown';
+import { environment } from '@/environment';
 
 export default function DiagnosticoPage() {
   const [showCard, setShowCard] = useState(true);
@@ -26,6 +27,20 @@ export default function DiagnosticoPage() {
   const [exampleImage, setExampleImage] = useState('');
   const classNames = ['mancha-de-alternaria', 'requeima']
 
+
+  function dataURLtoFile(dataUrl: string, filename: string): File {
+    let arr = dataUrl.split(',');
+    let mime = arr[0].match(/:(.*?);/)?.[1] || '';
+    let bstr = atob(arr[1]);
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
 
   const handleHelpClick = () => {
     setShowCard(true);
@@ -79,12 +94,11 @@ interface DetectedObject {
 
     try {
       // Enviar a imagem para o servidor usando uma requisição POST
-      const response = await fetch('/api/upload', {
+      const formData = new FormData();
+      formData.append('image', dataURLtoFile(imageData, 'temp.jpg')); // imageData pode ser um Blob ou File
+      const response = await fetch(`{environment.API_URL}/process_image`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: imageData }),
+        body: formData,
       });
 
       if (response.ok) {
