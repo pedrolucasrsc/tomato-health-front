@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Box,
@@ -10,6 +10,7 @@ import {
   CardActions,
   IconButton,
   CardContent,
+  CircularProgress,
 } from '@mui/material';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Camera, { FACING_MODES } from 'react-html5-camera-photo';
@@ -27,6 +28,7 @@ export default function DiagnosticoPage() {
   const [diagnosis, setDiagnosis] = useState('');
   const [llmOutput, setLlmOutput] = useState('');
   const [exampleImage, setExampleImage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const classNames = ['mancha-de-alternaria', 'requeima']
 
   function dataURLtoFile(dataUrl: string, filename: string): File {
@@ -106,6 +108,7 @@ export default function DiagnosticoPage() {
 
   const handleSendPhoto = async () => {
     if (!imageData && !file) return;
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -131,6 +134,8 @@ export default function DiagnosticoPage() {
       }
     } catch (error) {
       console.error('Erro ao enviar a foto:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -187,16 +192,44 @@ export default function DiagnosticoPage() {
                   onTakePhoto={(dataUri: string) => handleTakePhoto(dataUri)}
                   idealFacingMode={FACING_MODES.ENVIRONMENT}
                 />
+              ) : imageData && isLoading ? (
+                <Card sx={{ maxWidth: 345, margin: 'auto', position: 'relative' }}>
+                  <CardMedia component="img" image={imageData} alt="Foto do tomate" />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(0, 0, 0, 0.2)', // Escurece levemente a imagem
+                      zIndex: 1, // Coloca o overlay acima da imagem
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                  <CardActions sx={{ justifyContent: 'center' }}>
+                      <Button variant="contained" onClick={handleRetakePhoto}>
+                        Tentar novamente
+                      </Button>
+                      <Button variant="contained" color="primary" onClick={handleSendPhoto}>
+                        Enviar foto
+                      </Button>
+                  </CardActions>
+                </Card>
               ) : imageData ? (
-                <Card sx={{ maxWidth: 345, margin: 'auto' }}>
+                <Card sx={{ maxWidth: 345, margin: 'auto'}}>
                   <CardMedia component="img" image={imageData} alt="Foto do tomate" />
                   <CardActions sx={{ justifyContent: 'center' }}>
-                    <Button variant="contained" onClick={handleRetakePhoto}>
-                      Tentar novamente
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleSendPhoto}>
-                      Enviar foto
-                    </Button>
+                      <Button variant="contained" onClick={handleRetakePhoto}>
+                        Tentar novamente
+                      </Button>
+                      <Button variant="contained" color="primary" onClick={handleSendPhoto}>
+                        Enviar foto
+                      </Button>
                   </CardActions>
                 </Card>
               ) : (
@@ -224,6 +257,9 @@ export default function DiagnosticoPage() {
               )}
             </>
           )}
+
+          {/* {isLoading && ( */}
+          {/* )} */}
 
           <Box
             sx={{
