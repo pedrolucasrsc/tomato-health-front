@@ -17,16 +17,17 @@ import 'react-html5-camera-photo/build/css/index.css'; // Estilos para a câmera
 import { InstructionCard } from '../ui/instruction-card';
 import ReactMarkdown from 'react-markdown';
 import { environment } from '@/environment';
+import '@/app/globals.css'
 
 export default function DiagnosticoPage() {
   const [showCard, setShowCard] = useState(true);
   const [imageData, setImageData] = useState('');
+  const [file, setFile] = useState<File | null>(null); // Novo estado para armazenar o arquivo
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [diagnosis, setDiagnosis] = useState('');
   const [llmOutput, setLlmOutput] = useState('');
   const [exampleImage, setExampleImage] = useState('');
   const classNames = ['mancha-de-alternaria', 'requeima']
-
 
   function dataURLtoFile(dataUrl: string, filename: string): File {
     let arr = dataUrl.split(',');
@@ -49,34 +50,48 @@ export default function DiagnosticoPage() {
   const handleTakePhoto = (dataUri: string) => {
     setImageData(dataUri);
     setIsCameraActive(false);
+    setFile(null); // Limpa o arquivo selecionado
   };
 
   const handleRetakePhoto = () => {
     setImageData('');
-    setIsCameraActive(true);
+    setFile(null); // Limpa o arquivo selecionado
+    setIsCameraActive(false);
     setDiagnosis('');
     setLlmOutput('');
     setExampleImage('');
   };
 
-interface Response {
-  llm_response: string;
-  ml_result: MlResult;
-}
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setFile(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageData(reader.result as string); // Mostra a imagem na interface
+      };
+      reader.readAsDataURL(file);
+      setIsCameraActive(false);
+    }
+  };
 
-interface MlResult {
-  detected_objects: DetectedObject[];
-  image_height: number;
-  image_width: number;
-}
+  interface Response {
+    llm_response: string;
+    ml_result: MlResult;
+  }
 
-interface DetectedObject {
-  box: number[];
-  class_index: string;
-  class_name: string;
-  score: number;
-}
+  interface MlResult {
+    detected_objects: DetectedObject[];
+    image_height: number;
+    image_width: number;
+  }
 
+  interface DetectedObject {
+    box: number[];
+    class_index: string;
+    class_name: string;
+    score: number;
+  }
 
   function diagnosisImage(diagnosisName: string) {
     if (diagnosisExists(diagnosisName)) {
@@ -86,38 +101,30 @@ interface DetectedObject {
   }
 
   function diagnosisExists(diagnosisName: string) {
-    return classNames.includes(diagnosisName) 
+    return classNames.includes(diagnosisName)
   }
 
   const handleSendPhoto = async () => {
-    if (!imageData) return;
+    if (!imageData && !file) return;
 
     try {
-      // Enviar a imagem para o servidor usando uma requisição POST
-      console.log("1");
       const formData = new FormData();
-      console.log("2");
-      formData.append('image', dataURLtoFile(imageData, 'temp.jpg')); // imageData pode ser um Blob ou File
-      console.log("3");
+      if (file) {
+        formData.append('image', file);
+      } else if (imageData) {
+        formData.append('image', dataURLtoFile(imageData, 'temp.jpg'));
+      }
+
       const response = await fetch(`${environment.API_URL}/process_image`, {
         method: 'POST',
         body: formData,
       });
-      console.log("resposta a seguir");
-      console.log(`resposta: ${response}`);
 
       if (response.ok) {
-        // Lidar com a resposta do servidor
-        console.log("entrou aqui")
         const result: Response = await response.json();
-        console.log(`result: ${result.llm_response}`)
-        console.log("4")
         const diagnosis = result.ml_result.detected_objects[0].class_name;
-        console.log("5")
         setDiagnosis(diagnosis);
         setLlmOutput(result.llm_response);
-
-        // mudar para acomodar novos exemplos
         setExampleImage(diagnosisImage(diagnosis));
       } else {
         alert('Falha ao enviar a foto.');
@@ -137,15 +144,12 @@ interface DetectedObject {
             Diagnostique seu tomate
           </Typography>
 
-          {/* Se tivermos um diagnóstico, mostramos o resultado */}
           {diagnosis ? (
             <Box sx={{ mt: 4 }}>
               <Typography variant="h5" gutterBottom>
                 Seu tomateiro está com: {diagnosis}
               </Typography>
-              <ReactMarkdown>
-                {llmOutput}
-              </ReactMarkdown>
+              <ReactMarkdown>{llmOutput}</ReactMarkdown>
               <Box
                 sx={{
                   display: 'flex',
@@ -154,7 +158,6 @@ interface DetectedObject {
                   justifyContent: 'center',
                 }}
               >
-                {/* Imagem tirada pelo usuário */}
                 <Card sx={{ maxWidth: 345, m: 2 }}>
                   <CardMedia component="img" image={imageData} alt="Sua foto" />
                   <CardContent>
@@ -164,7 +167,6 @@ interface DetectedObject {
                   </CardContent>
                 </Card>
 
-                {/* Imagem de exemplo da doença */}
                 <Card sx={{ maxWidth: 345, m: 2 }}>
                   <CardMedia component="img" image={exampleImage} alt="Exemplo da doença" />
                   <CardContent>
@@ -174,17 +176,11 @@ interface DetectedObject {
                   </CardContent>
                 </Card>
               </Box>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleRetakePhoto}
-                sx={{ mt: 2 }}
-              >
+              <Button variant="contained" color="primary" onClick={handleRetakePhoto} sx={{ mt: 2 }}>
                 Diagnosticar novamente
               </Button>
             </Box>
           ) : (
-            // Renderizações anteriores (câmera, confirmação de envio, etc.)
             <>
               {isCameraActive ? (
                 <Camera
@@ -196,7 +192,7 @@ interface DetectedObject {
                   <CardMedia component="img" image={imageData} alt="Foto do tomate" />
                   <CardActions sx={{ justifyContent: 'center' }}>
                     <Button variant="contained" onClick={handleRetakePhoto}>
-                      Tirar outra foto
+                      Tentar novamente
                     </Button>
                     <Button variant="contained" color="primary" onClick={handleSendPhoto}>
                       Enviar foto
@@ -204,14 +200,31 @@ interface DetectedObject {
                   </CardActions>
                 </Card>
               ) : (
-                <Button variant="contained" onClick={() => setIsCameraActive(true)}>
-                  Acessar a câmera
-                </Button>
+                <Box className="flex flex-col items-center justify-start min-h-screen mt-16 space-y-4">
+                  <Button variant="contained" onClick={() => setIsCameraActive(true)}>
+                    Acessar a câmera
+                  </Button>
+                  {/* Botão para escolher arquivo estilizado com Material-UI */}
+                  <input
+                    accept="image/*"
+                    id="file-upload"
+                    type="file"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }} // Escondemos o input
+                  />
+                  <label htmlFor="file-upload">
+                    <Button
+                      variant="contained"
+                      component="span" // Necessário para tornar o label clicável
+                    >
+                      Escolher arquivo
+                    </Button>
+                  </label>
+                </Box>
               )}
             </>
           )}
 
-          {/* Botão de interrogação */}
           <Box
             sx={{
               position: 'fixed',
