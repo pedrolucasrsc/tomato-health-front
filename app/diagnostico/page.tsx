@@ -25,9 +25,8 @@ export default function DiagnosticoPage() {
   const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<File | null>(null); // Novo estado para armazenar o arquivo
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [diagnosis, setDiagnosis] = useState('');
   const [llmOutput, setLlmOutput] = useState('');
-  const [exampleImage, setExampleImage] = useState('');
+  // const [exampleImage, setExampleImage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const classNames = ['mancha-de-alternaria', 'requeima']
 
@@ -59,9 +58,8 @@ export default function DiagnosticoPage() {
     setImageData('');
     setFile(null); // Limpa o arquivo selecionado
     setIsCameraActive(false);
-    setDiagnosis('');
     setLlmOutput('');
-    setExampleImage('');
+    // setExampleImage('');
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,16 +93,16 @@ export default function DiagnosticoPage() {
     score: number;
   }
 
-  function diagnosisImage(diagnosisName: string) {
-    if (diagnosisExists(diagnosisName)) {
-      return '/exemplos/'.concat(diagnosisName, '.webp');
-    }
-    return '/exemplos/not-found.webp';
-  }
+  // function diagnosisImage(diagnosisName: string) {
+  //   if (diagnosisExists(diagnosisName)) {
+  //     return '/exemplos/'.concat(diagnosisName, '.webp');
+  //   }
+  //   return '/exemplos/not-found.webp';
+  // }
 
-  function diagnosisExists(diagnosisName: string) {
-    return classNames.includes(diagnosisName)
-  }
+  // function diagnosisExists(diagnosisName: string) {
+  //   return classNames.includes(diagnosisName)
+  // }
 
   const handleSendPhoto = async () => {
     if (!imageData && !file) return;
@@ -125,10 +123,7 @@ export default function DiagnosticoPage() {
 
       if (response.ok) {
         const result: Response = await response.json();
-        const diagnosis = result.ml_result.detected_objects[0].class_name;
-        setDiagnosis(diagnosis);
         setLlmOutput(result.llm_response);
-        setExampleImage(diagnosisImage(diagnosis));
       } else {
         alert('Falha ao enviar a foto.');
       }
@@ -149,38 +144,35 @@ export default function DiagnosticoPage() {
             Diagnostique seu tomate
           </Typography>
 
-          {diagnosis ? (
+          {llmOutput ? (
             <Box sx={{ mt: 4 }}>
-              <Typography variant="h5" gutterBottom>
-                Seu tomateiro está com: {diagnosis}
-              </Typography>
               <ReactMarkdown>{llmOutput}</ReactMarkdown>
-              <Box
+              {/* <Box
                 sx={{
                   display: 'flex',
                   flexDirection: { xs: 'column', sm: 'row' },
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-              >
-                <Card sx={{ maxWidth: 345, m: 2 }}>
-                  <CardMedia component="img" image={imageData} alt="Sua foto" />
-                  <CardContent>
-                    <Typography variant="subtitle1" align="center">
-                      Sua Foto
-                    </Typography>
-                  </CardContent>
-                </Card>
+              > */}
+              <Card sx={{ maxWidth: 345, m: 2 }}>
+                <CardMedia component="img" image={imageData} alt="Sua foto" />
+                <CardContent>
+                  <Typography variant="subtitle1" align="center">
+                    Sua Foto
+                  </Typography>
+                </CardContent>
+              </Card>
 
-                <Card sx={{ maxWidth: 345, m: 2 }}>
+              {/* <Card sx={{ maxWidth: 345, m: 2 }}>
                   <CardMedia component="img" image={exampleImage} alt="Exemplo da doença" />
                   <CardContent>
                     <Typography variant="subtitle1" align="center">
                       Exemplo de {diagnosis}
                     </Typography>
                   </CardContent>
-                </Card>
-              </Box>
+                </Card> */}
+              {/* </Box> */}
               <Button variant="contained" color="primary" onClick={handleRetakePhoto} sx={{ mt: 2 }}>
                 Diagnosticar novamente
               </Button>
@@ -212,24 +204,24 @@ export default function DiagnosticoPage() {
                     <CircularProgress />
                   </Box>
                   <CardActions sx={{ justifyContent: 'center' }}>
-                      <Button variant="contained" onClick={handleRetakePhoto}>
-                        Tentar novamente
-                      </Button>
-                      <Button variant="contained" color="primary" onClick={handleSendPhoto}>
-                        Enviar foto
-                      </Button>
+                    <Button variant="contained" onClick={handleRetakePhoto}>
+                      Tentar novamente
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleSendPhoto}>
+                      Enviar foto
+                    </Button>
                   </CardActions>
                 </Card>
               ) : imageData ? (
-                <Card sx={{ maxWidth: 345, margin: 'auto'}}>
+                <Card sx={{ maxWidth: 345, margin: 'auto' }}>
                   <CardMedia component="img" image={imageData} alt="Foto do tomate" />
                   <CardActions sx={{ justifyContent: 'center' }}>
-                      <Button variant="contained" onClick={handleRetakePhoto}>
-                        Tentar novamente
-                      </Button>
-                      <Button variant="contained" color="primary" onClick={handleSendPhoto}>
-                        Enviar foto
-                      </Button>
+                    <Button variant="contained" onClick={handleRetakePhoto}>
+                      Tentar novamente
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleSendPhoto}>
+                      Enviar foto
+                    </Button>
                   </CardActions>
                 </Card>
               ) : (
@@ -257,9 +249,6 @@ export default function DiagnosticoPage() {
               )}
             </>
           )}
-
-          {/* {isLoading && ( */}
-          {/* )} */}
 
           <Box
             sx={{
